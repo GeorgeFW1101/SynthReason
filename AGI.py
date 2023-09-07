@@ -1,4 +1,4 @@
-# SynthReason - Synthetic Dawn - AGI - intelligent symbolic manipulation system - 1.2
+# SynthReason - Synthetic Dawn - AGI - intelligent symbolic manipulation system - 1.3
 # BSD 2-Clause License
 # 
 # Copyright (c) 2023, George Wagenknecht
@@ -52,13 +52,13 @@ for question in questions:
                 for item in set.intersection(set(sentences[i-1].split(word))
                 ,set(sentences[i].split(word))
                  ,set(sentences[i+1].split(word))):             
-                    index_before = sentences[i-1].rfind(word)
+                    index_before = ' '.join(output).rfind(item)
                     index_after = sentences[i+1].find(item)
                     dot = sentences[i].find(".")
                     comma = sentences[i].find(",")
-                    if index_before != comma and index_after != dot:
+                    if index_before != comma and index_after < dot:
                         if index_before == index_after:
-                            output.append(' '.join(sentences[i].split(word)[0].split()[dot:dot+4]) + " ")
+                            output.append(' '.join(sentences[i+1].split(word)[0].split()[comma:comma+4]) + " ")
                             break        
         output = ''.join(output)        
         print("\nusing:", file.strip(), "answering:", user, "\nAI:", output, "\n\n")
