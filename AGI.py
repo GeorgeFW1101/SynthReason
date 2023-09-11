@@ -1,4 +1,4 @@
-# SynthReason - Synthetic Dawn - AGI - intelligent symbolic manipulation system - 1.7
+# SynthReason - Synthetic Dawn - AGI - intelligent symbolic manipulation system - 1.8
 # BSD 2-Clause License
 # 
 # Copyright (c) 2023, George Wagenknecht
@@ -53,7 +53,7 @@
 import random
 import re
 import math
-token = " to "
+token = "."
 size = 100
 with open("fileList.conf", encoding='ISO-8859-1') as f:
     files = f.read().splitlines()
@@ -72,23 +72,15 @@ for question in questions:
         words = user.split()
         sentences = text.split(token)
         random.shuffle(sentences)        
-        for i in range(size):
-            output.append(' '.join(sentences[i].split()[0:4]) + " ")
-        for i in range(0, len(sentences) - 3, 3):
-            for word in words:
-                for item in set.union(set(sentences[i-1].split(word))
-                ,set(sentences[i].split(word))
-                 ,set(sentences[i+1].split(word))):             
-                    index_before = ' '.join(output).rfind(item)
-                    index_after = sentences[i+1].find(item)
-                    dot = sentences[i].find(".")
-                    comma = sentences[i].find(",")
-                    if math.cos(index_before) > math.sin(sentences[i+1].find(item)) >i* math.cos(index_after) < math.sin(sentences[i+1].find(item)):
-                        if index_before == index_after+1:
-                            output.append(' '.join(sentences[i+1].split(word)[0].split()[index_before:index_before+4]) + " ")
-                            break        
-        output = ''.join(output)        
-        print("\nusing:", file.strip(), "answering:", user, "\nAI:", output, "\n\n")
-        with open(filename, "a", encoding="utf8") as f:
-            f.write("\nusing: " + file.strip() + " answering: " + user + "\n" + output + "\n")
-        break
+        for word in words:
+            for i in range(0, len(sentences) - 3, 6):            
+                if sentences[i].lower().find(word) > -1 and  len(''.join(''.join(sentences[i].split(word)[0]).split()))>2 and len(sentences[i].split(word))>2 and len(''.join(sentences[i].split(word)[1]).split())>2:
+                   output.append(' '.join(''.join(sentences[i].split(word)[0]).split()[-4:-1]))
+                   output.append(' '.join(''.join(sentences[i].split(word)[1]).split()[-4:-1]))
+                   output.append(' '.join(''.join(sentences[i].split(word)[2]).split()[-4:-1]))
+        if len(' '.join(output).split()) > size:
+            output = ' '.join(output)        
+            print("\nusing:", file.strip(), "answering:", user, "\nAI:", output, "\n\n")
+            with open(filename, "a", encoding="utf8") as f:
+                f.write("\nusing: " + file.strip() + " answering: " + user + "\n" + output + "\n")
+            break
