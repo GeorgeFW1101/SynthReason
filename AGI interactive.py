@@ -1,4 +1,4 @@
-# SynthReason - Synthetic Dawn - AGI - intelligent symbolic manipulation system - 1.8
+# SynthReason - Synthetic Dawn - AGI - intelligent symbolic manipulation system - 2.0
 # BSD 2-Clause License
 # 
 # Copyright (c) 2023, George Wagenknecht
@@ -26,8 +26,9 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 import random
 import re
-token = "."
-size = 100
+import math
+token = " to "
+size = 25
 with open("fileList.conf", encoding='ISO-8859-1') as f:
     files = f.read().splitlines()
 print("SynthReason - Synthetic Dawn")
@@ -35,7 +36,7 @@ with open("questions.conf", encoding='ISO-8859-1') as f:
     questions = f.read().splitlines()
 filename = "Compendium#" + str(random.randint(0, 10000000)) + ".txt"
 random.shuffle(questions)
-while(True):
+while True:
     user = re.sub('\W+', ' ', input("USER: ").lower())
     random.shuffle(files)
     for file in files:
@@ -43,14 +44,26 @@ while(True):
             text = f.read()
         output = []
         words = user.split()
-        sentences = text.split(token)      
-        random.shuffle(sentences)
+        sentences = text.split(token)
+        sentences = sorted(sentences, key=lambda x: len(x)*(len(set(x))))        
         for word in words:
-            for i in range(0, len(sentences) - 3, 6):            
-                if sentences[i].lower().find(word) > -1 and  len(''.join(''.join(sentences[i].split(word)[0]).split()))>2 and len(sentences[i].split(word))>2 and len(''.join(sentences[i].split(word)[1]).split())>2:
-                   output.append(' '.join(''.join(sentences[i].split(word)[0]).split()[-4:-1]))
-                   output.append(' '.join(''.join(sentences[i].split(word)[1]).split()[-4:-1]))
-                   output.append(' '.join(''.join(sentences[i].split(word)[2]).split()[-4:-1]))
+            for i in range(0, len(sentences) - 3):            
+                if sentences[i].lower().find(word) > -1:
+                    
+                   output.append(' '.join(sentences[i].split()[0:4]))
+                   middle_index = len(output) // 2
+        output = sorted(output, key=lambda x: len(set(output)) * (len(set(sentences[i].split()))))
+
+# Split the sorted list into two halves
+        beginning_half = output[:middle_index]
+        end_half = output[middle_index:]
+        interleaved_output = []
+        for i in range(middle_index):
+            interleaved_output.append(beginning_half[i])
+            interleaved_output.append(end_half[i])
+            interleaved_output.extend(end_half[middle_index:])
+            output = interleaved_output
+
         if len(' '.join(output).split()) > size:
             output = ' '.join(output)        
             print("\nusing:", file.strip(), "answering:", user, "\nAI:", output, "\n\n")
