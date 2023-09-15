@@ -1,4 +1,4 @@
-# SynthReason - Synthetic Dawn - AGI - intelligent symbolic manipulation system - 2.1
+# SynthReason - Synthetic Dawn - AGI - intelligent symbolic manipulation system - 2.2
 # BSD 2-Clause License
 # 
 # Copyright (c) 2023, George Wagenknecht
@@ -66,7 +66,7 @@ while(True):
         sentences_with_wave.sort(key=lambda x: x[1])
         
         # Select the first 2 words of each sentence
-        selected_sentences = [' '.join(sentence.split()[:int(round(wave_val * 10))]) for sentence, wave_val in sentences_with_wave][:size]
+        selected_sentences = [' '.join(sentence.split()[0:4]) for sentence, wave_val in sentences_with_wave][:size]
 
         output_with_wave = ' '.join(selected_sentences)
         
