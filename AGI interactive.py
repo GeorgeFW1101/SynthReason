@@ -1,4 +1,4 @@
-# SynthReason - Synthetic Dawn - AGI - intelligent symbolic manipulation system - 2.4
+# SynthReason - Synthetic Dawn - AGI - intelligent symbolic manipulation system - 2.5
 # BSD 2-Clause License
 # 
 # Copyright (c) 2023, George Wagenknecht
@@ -27,7 +27,7 @@
 import random
 import re
 import math
-token = " to "
+token = " and "
 size = 25
 with open("fileList.conf", encoding='ISO-8859-1') as f:
         files = f.read().splitlines()
@@ -44,7 +44,7 @@ while True:
         sentences = [sentence for sentence in sentences if any(word in sentence for word in user.split())]
         random.shuffle(sentences)
         sine_frequency, cosine_frequency, amplitude, phase = 1.2, 0.8, 0.5, 1.1  # Adjust as needed        
-        sine_values = [amplitude * math.cos(2 * math.pi * sine_frequency * i + phase) for i in range(len(sentences))]
+        sine_values = [amplitude / math.cos(2 * math.pi * sine_frequency * i + phase) for i in range(len(sentences))]
         cosine_values = [amplitude / math.degrees(2 * math.pi * cosine_frequency * i + phase) for i in range(len(sentences))]        
         combined_wave = [s + c for s, c in zip(sine_values, cosine_values)]        
         sentences_with_wave = sorted(zip(sentences, combined_wave), key=lambda x: x[1], reverse=True)        
