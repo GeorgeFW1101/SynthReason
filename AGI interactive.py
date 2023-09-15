@@ -1,4 +1,4 @@
-# SynthReason - Synthetic Dawn - AGI - intelligent symbolic manipulation system - 2.3
+# SynthReason - Synthetic Dawn - AGI - intelligent symbolic manipulation system - 2.4
 # BSD 2-Clause License
 # 
 # Copyright (c) 2023, George Wagenknecht
@@ -30,49 +30,28 @@ import math
 token = " to "
 size = 25
 with open("fileList.conf", encoding='ISO-8859-1') as f:
-    files = f.read().splitlines()
+        files = f.read().splitlines()
 print("SynthReason - Synthetic Dawn")
 with open("questions.conf", encoding='ISO-8859-1') as f:
     questions = f.read().splitlines()
-filename = "Compendium#" + str(random.randint(0, 10000000)) + ".txt"
-random.shuffle(questions)
-while(True):
+while True:
     user = re.sub('\W+', ' ', input("USER: ").lower())
-    random.shuffle(files)
+    random.shuffle(files)    
     for file in files:
         with open(file, encoding='UTF-8') as f:
             text = f.read()
-        output = []
-        words = user.split()
         sentences = text.split(token)
+        sentences = [sentence for sentence in sentences if any(word in sentence for word in user.split())]
         random.shuffle(sentences)
-        # Define sine and cosine wave parameters
-        sine_frequency = 1.2  # Adjust as needed
-        cosine_frequency = 0.8  # Adjust as needed
-        amplitude = 0.5  # Adjust as needed
-        phase = 1.1  # Adjust as needed
-        
-        # Generate sine and cosine wave values
+        sine_frequency, cosine_frequency, amplitude, phase = 1.2, 0.8, 0.5, 1.1  # Adjust as needed        
         sine_values = [amplitude * math.cos(2 * math.pi * sine_frequency * i + phase) for i in range(len(sentences))]
-        cosine_values = [amplitude / math.degrees(2 * math.pi * cosine_frequency * i + phase) for i in range(len(sentences))]
-        
-        # Combine sine and cosine waves element-wise
-        combined_wave = [s + c for s, c in zip(sine_values, cosine_values)]
-        
-        # Create a list of sentences along with their combined wave values
-        sentences_with_wave = list(zip(sentences, combined_wave))
-        
-        # Sort sentences based on the combined wave values in descending order
-        sentences_with_wave.sort(key=lambda x: x[1])
-        
-        # Select the first 2 words of each sentence
-        selected_sentences = [' '.join(sentence.split()[0:4]) for sentence, wave_val in sentences_with_wave][:size]
-
-        output_with_wave = ' '.join(selected_sentences)
-        
-        print("\nusing:", file.strip(), "answering:", user, "\nAI:", output_with_wave, "\n\n")
-        
-        # Write to the output file
+        cosine_values = [amplitude / math.degrees(2 * math.pi * cosine_frequency * i + phase) for i in range(len(sentences))]        
+        combined_wave = [s + c for s, c in zip(sine_values, cosine_values)]        
+        sentences_with_wave = sorted(zip(sentences, combined_wave), key=lambda x: x[1], reverse=True)        
+        selected_sentences = [' '.join(sentence.split()[:4]) for sentence, _ in sentences_with_wave][:size]
+        output_with_wave = ' '.join(selected_sentences)      
+        print("\nusing:", file.strip(), "answering:", user, "\nAI:", output_with_wave, "\n\n")        
+        filename = "Compendium#" + str(random.randint(0, 10000000)) + ".txt"
         with open(filename, "a", encoding="utf8") as f:
             f.write("\nusing: " + file.strip() + " answering: " + user + "\n" + output_with_wave + "\n")
         
