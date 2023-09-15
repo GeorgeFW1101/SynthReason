@@ -1,4 +1,4 @@
-# SynthReason - Synthetic Dawn - AGI - intelligent symbolic manipulation system - 2.2
+# SynthReason - Synthetic Dawn - AGI - intelligent symbolic manipulation system - 2.3
 # BSD 2-Clause License
 # 
 # Copyright (c) 2023, George Wagenknecht
@@ -54,7 +54,7 @@ while(True):
         
         # Generate sine and cosine wave values
         sine_values = [amplitude * math.cos(2 * math.pi * sine_frequency * i + phase) for i in range(len(sentences))]
-        cosine_values = [amplitude * math.degrees(2 * math.pi * cosine_frequency * i + phase) for i in range(len(sentences))]
+        cosine_values = [amplitude / math.degrees(2 * math.pi * cosine_frequency * i + phase) for i in range(len(sentences))]
         
         # Combine sine and cosine waves element-wise
         combined_wave = [s + c for s, c in zip(sine_values, cosine_values)]
