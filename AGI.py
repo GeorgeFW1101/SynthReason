@@ -1,4 +1,4 @@
-# SynthReason - Synthetic Dawn - AGI - intelligent symbolic manipulation system - 2.0
+# SynthReason - Synthetic Dawn - AGI - intelligent symbolic manipulation system - 2.1
 # BSD 2-Clause License
 # 
 # Copyright (c) 2023, George Wagenknecht
@@ -45,28 +45,35 @@ for question in questions:
         output = []
         words = user.split()
         sentences = text.split(token)
-        sentences = sorted(sentences, key=lambda x: len(x)*(len(set(x))))        
-        for word in words:
-            for i in range(0, len(sentences) - 3):            
-                if sentences[i].lower().find(word) > -1:
-                    
-                   output.append(' '.join(sentences[i].split()[0:4]))
-                   middle_index = len(output) // 2
-        output = sorted(output, key=lambda x: len(set(output)) * (len(set(sentences[i].split()))))
+        random.shuffle(sentences)
+        # Define sine and cosine wave parameters
+        sine_frequency = 1.2  # Adjust as needed
+        cosine_frequency = 0.8  # Adjust as needed
+        amplitude = 0.5  # Adjust as needed
+        phase = 1.1  # Adjust as needed
+        
+        # Generate sine and cosine wave values
+        sine_values = [amplitude * math.cos(2 * math.pi * sine_frequency * i + phase) for i in range(len(sentences))]
+        cosine_values = [amplitude * math.degrees(2 * math.pi * cosine_frequency * i + phase) for i in range(len(sentences))]
+        
+        # Combine sine and cosine waves element-wise
+        combined_wave = [s + c for s, c in zip(sine_values, cosine_values)]
+        
+        # Create a list of sentences along with their combined wave values
+        sentences_with_wave = list(zip(sentences, combined_wave))
+        
+        # Sort sentences based on the combined wave values in descending order
+        sentences_with_wave.sort(key=lambda x: x[1])
+        
+        # Select the first 2 words of each sentence
+        selected_sentences = [' '.join(sentence.split()[:int(round(wave_val * 10))]) for sentence, wave_val in sentences_with_wave][:size]
 
-# Split the sorted list into two halves
-        beginning_half = output[:middle_index]
-        end_half = output[middle_index:]
-        interleaved_output = []
-        for i in range(middle_index):
-            interleaved_output.append(beginning_half[i])
-            interleaved_output.append(end_half[i])
-            interleaved_output.extend(end_half[middle_index:])
-            output = interleaved_output
-
-        if len(' '.join(output).split()) > size:
-            output = ' '.join(output)        
-            print("\nusing:", file.strip(), "answering:", user, "\nAI:", output, "\n\n")
-            with open(filename, "a", encoding="utf8") as f:
-                f.write("\nusing: " + file.strip() + " answering: " + user + "\n" + output + "\n")
-            break
+        output_with_wave = ' '.join(selected_sentences)
+        
+        print("\nusing:", file.strip(), "answering:", user, "\nAI:", output_with_wave, "\n\n")
+        
+        # Write to the output file
+        with open(filename, "a", encoding="utf8") as f:
+            f.write("\nusing: " + file.strip() + " answering: " + user + "\n" + output_with_wave + "\n")
+        
+        break
