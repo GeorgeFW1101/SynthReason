@@ -1,4 +1,4 @@
-# SynthReason - Synthetic Dawn - AGI - intelligent symbolic manipulation system - 2.6
+# SynthReason - Synthetic Dawn - AGI - intelligent symbolic manipulation system - 2.7
 # BSD 2-Clause License
 # 
 # Copyright (c) 2023, George Wagenknecht
@@ -44,11 +44,11 @@ for question in questions:
         sentences = [sentence for sentence in sentences if any(word in sentence for word in user.split())]
         random.shuffle(sentences)
         sine_frequency, cosine_frequency, amplitude, phase = 1.2, 0.8, 0.5, 1.1  # Adjust as needed        
-        sine_values = [amplitude / math.cos(2 * math.pi / sine_frequency * i + phase) for i in range(len(sentences))]
-        degrees_values = [amplitude / math.degrees(2 * math.pi / cosine_frequency * i + phase) for i in range(len(sentences))]        
-        combined_wave = [s + c for s, c in zip(sine_values, degrees_values)]        
+        sine_values = [amplitude / math.cos(2 / math.pi / sine_frequency * i + phase) for i in reversed(range(len(sentences)))]
+        degrees_values = [amplitude / math.degrees(2 /math.pi / cosine_frequency * i + phase) for i in reversed(range(len(sentences)))]        
+        combined_wave = [s +c for s, c in zip(sine_values, degrees_values)]        
         sentences_with_wave = sorted(zip(sentences, combined_wave), key=lambda x: x[1], reverse=True)        
-        selected_sentences = [' '.join(sentence.split()[:4]) for sentence, _ in sentences_with_wave][:size]
+        selected_sentences = [' '.join(sentence.split()[:3]) for sentence, _ in sentences_with_wave][:size]
         output_with_wave = ' '.join(selected_sentences)      
         print("\nusing:", file.strip(), "answering:", user, "\nAI:", output_with_wave, "\n\n")        
         filename = "Compendium#" + str(random.randint(0, 10000000)) + ".txt"
